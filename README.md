@@ -1,6 +1,9 @@
-IITI Housekeeping App
+# IITI Housekeeping App
 
 UI Design by Devashish Shukla.
-For IIT Indore Community.
-Firebase is used for database.
-Floating Action Button from Github repo.
+
+For use by IIT Indore Community only.
+
+Firebase is used for database interactions.
+
+Floating Action Button from https://github.com/Scalified/fab.
