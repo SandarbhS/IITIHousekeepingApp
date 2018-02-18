@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_item"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/drawer_icon"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/icon_caller"/>
+    <TextView
+        android:id="@+id/drawer_option"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Button"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="50dp"
+        style="@style/DrawerList"/>
+
+</LinearLayout>

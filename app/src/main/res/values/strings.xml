@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">IITI Housekeeping</string>
+    <string name="blank_page_msg">No Requests yet.\n\nTap \'+\' button to put\n up a new request.</string>
+    <string name="blank_page_supervisor">No Requests yet.</string>
+    <string name="BACK_MSG">Press Back again to exit.</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="sec_ago">few seconds ago</string>
+    <string name="mins_ago">%d min ago</string>
+    <string name="hours_ago">%d h ago</string>
+    <string name="days_ago">%d d ago</string>
+    <string name="username">%s</string>
+    <string name="title_activity_nd">nd</string>
+    <string name="info">Info</string>
+    <string name="about">
+        Version : %s\n\n
+        The purpose of the app is to make the interactions between Students and Housekeeping staff easy.\n\n
+        Developed By : Sandarbh Sahu\n\n
+        UI Designer : Devashish Shukla\n
+    </string>
+    <string name="shared_prefs">Login_Details</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="drawer_list">
+        <item name="info">About</item>
+        <item name="contacts">Contacts</item>
+        <item name="logout">Log Out</item>
+    </string-array>
+
+    <string-array name="contacts_list">
+        <item name= "n1">Sandarbh Sahu</item>
+        <item name= "p1">Developer</item>
+        <item name= "c1">+91 8349538366</item>
+
+        <item name= "n2">Devashish Shukla</item>
+        <item name= "p2">Designer</item>
+        <item name= "c2">+91 7017585260</item>
+    </string-array>
+
+    <integer-array name="drawer_icons">
+        <item name="info">@drawable/info_2</item>
+        <item name="contact">@drawable/icon_caller</item>
+        <item name="logout">@drawable/logout_icon</item>
+    </integer-array>
+
+    <integer-array name="contact_icon_color">
+        <item name= "col1">@color/PendingRequest</item>
+        <item name= "col2">@color/colorPrimary</item>
+        <item name= "col3">@color/BGloginButton</item>
+
+    </integer-array>
+
+</resources>
