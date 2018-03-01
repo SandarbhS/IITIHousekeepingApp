@@ -3,7 +3,6 @@ package com.braille.tesseract.sandarbh.iitihousekeeping;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -32,8 +31,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +51,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.braille.tesseract.sandarbh.iitihousekeeping.Login.toolbar;
 
 public class Student_Activity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -127,13 +123,16 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
         roomUser = DB.child(USERNAME);
 
         Log.e("DEBUG_Main","RoomNo: "+USERNAME);
+        Log.e("DEBUG_Main","Firebase: "+roomUser.getKey());
     }
 
     private void checkDailyMessage(){
+        Log.e("DEBUG_Main","CHecking Messages");
 
         DB.child("Message").child("Daily Message").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("DEBUG_Main","CHecking Messages");
                 String message = (String) dataSnapshot.getValue();
 
                 if (!message.equals("N/A")){
@@ -149,13 +148,14 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e("DEBUG_Main","CHecking Messages Failed");
             }
         });
 
         DB.child("Message").child("Latest Version").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("DEBUG_Main","CHecking Messages");
                 String latestVersion = (String) dataSnapshot.getValue();
 
                 if (!latestVersion.equals(BuildConfig.VERSION_NAME)){
@@ -170,12 +170,13 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e("DEBUG_Main","CHecking Messages Failed");
             }
         });
     }
 
     public void getAvailableRequests(){
+        Log.e("DEBUG_Main","CHecking Requests");
 
         if (isConnectedToNetwork()) {
             roomUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -698,7 +699,7 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) {
-            Log.e("DEBUG", "OK");
+            Log.e("DEBUG", "Network : OK");
             return true;
         }
         else
@@ -767,7 +768,8 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
         if (exit){
             Log.e("dg",""+toast.isVisible()+" "+View.VISIBLE);
             //FirebaseAuth.getInstance().signOut();
-            uploadDataToDatabase();
+            //uploadDataToDatabase();
+            finish();
         }
         else{
 

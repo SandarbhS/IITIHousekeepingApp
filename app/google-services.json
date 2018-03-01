@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "174333945286-6nblbsio03gjfqg62l6bqclusgsbgabn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.braille.tesseract.sandarbh.iitihousekeeping",
+            "certificate_hash": "bb91b329ae7755fbf5813f2cd4de1e111076270d"
+          }
+        },
+        {
           "client_id": "174333945286-fiamul63360eot14oh59tcp117hp3e5k.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174333945286-fiamul63360eot14oh59tcp117hp3e5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

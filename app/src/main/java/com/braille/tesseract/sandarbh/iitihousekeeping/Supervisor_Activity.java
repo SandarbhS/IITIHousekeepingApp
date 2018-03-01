@@ -371,7 +371,7 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
 
         if (exit){
             //uploadDataToDatabase();
-            FirebaseAuth.getInstance().signOut();
+            //FirebaseAuth.getInstance().signOut();
             finish();
         }
         else{

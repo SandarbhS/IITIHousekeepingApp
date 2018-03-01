@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +35,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -111,6 +108,7 @@ public class Login extends AppCompatActivity {
         super.onStart();
 
         preferences  = getSharedPreferences(getResources().getString(R.string.shared_prefs),MODE_PRIVATE);
+        boolean FIRST_VISIT = preferences.getBoolean("FIRST_VISIT",true);
 
         boolean logged_in = preferences.getBoolean("LOGGED IN",false);
         if (logged_in) {
@@ -308,6 +306,12 @@ public class Login extends AppCompatActivity {
                     Log.e("DEBUG_LOGIN",preferences.getBoolean("LOGGED IN",false)+"");
 
                     FirebaseUser curr_user = authenticate.getCurrentUser();
+//                    curr_user.getIdToken(true).addOnCompleteListener(thisActivity, new OnCompleteListener<GetTokenResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+//                            Log.e("TOKEN",""+task.getResult().getToken());
+//                        }
+//                    });
                     if (curr_user.getDisplayName() == null) {
                         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(email).build();
@@ -433,71 +437,6 @@ public class Login extends AppCompatActivity {
                 break;
         }
         return pixels;
-    }
-
-    private static class FirebaseLogin extends AsyncTask<Void,Void,Void>{
-
-        String email,password;
-        Context context;
-        final CustomToast invalid;
-
-        FirebaseLogin(Context c){
-            context = c;
-            invalid = new CustomToast(thisActivity);
-        }
-        @Override
-        protected void onPreExecute() {
-
-            email = roomno.getText().toString();
-            password = stupwd.getText().toString();
-
-            if (email.isEmpty() || password.isEmpty()){
-                Log.e("DEBUG", "CANCELLED");
-                cancel(true);
-            }
-            else{
-                //cancel(false);
-                Log.e("DEBUG", "LOGIN");
-                dialog.show();
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            Log.e("DEBUG", "EXECUTING");
-            authenticate.signInWithEmailAndPassword(email.concat("@sandarbh.firebaseapp.com"), password).addOnCompleteListener(thisActivity, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.e("DEBUG", "SUCCESS");
-
-                    } else {
-                        Log.e("DEBUG", "FAILED");
-                        cancel(true);
-                    }
-                }
-
-            });
-
-            return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            Log.e("DEBUG", "CANCELLED");
-            invalid.showToast("Invalid Credentials!");
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Log.e("DEBUG", "POST EXECUTE");
-            dialog.dismiss();
-
-            Intent Enter = new Intent(context, Student_Activity.class);
-            context.startActivity(Enter);
-            thisActivity.finish();
-        }
     }
 
     @Override
