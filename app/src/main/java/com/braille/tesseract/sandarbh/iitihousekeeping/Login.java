@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -123,6 +124,7 @@ public class Login extends AppCompatActivity {
                     redirect = new Intent(thisActivity, Student_Activity.class);
                 //redirect.putExtra("User",user.getDisplayName());
                 Log.e("DEBUG_Login", "" + USERNAME);
+
                 startActivity(redirect);
                 thisActivity.finish();
             }
@@ -182,7 +184,6 @@ public class Login extends AppCompatActivity {
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
             int code = this.getArguments().getInt("Code");
-
             switch (code){
 
                 case 0 : final View student_login = inflater.inflate(R.layout.student_login,container,false);
@@ -208,7 +209,14 @@ public class Login extends AppCompatActivity {
                             else {
                                 dialog.show();
                                 Log.e("DEBUG", "EXECUTING");
-                                loginUser(email,password,STUDENT_LOGIN);
+                                ConnectivityManager cm = (ConnectivityManager)getContext().getSystemService(CONNECTIVITY_SERVICE);
+                                if (cm.getActiveNetworkInfo() != null)
+                                    loginUser(email,password,STUDENT_LOGIN);
+                                else{
+                                    dialog.dismiss();
+                                    CustomToast noNetwork = new CustomToast(thisActivity);
+                                    noNetwork.showToast("No Internet Connection! Please try again.");
+                                }
                             }
                         }
                     });
@@ -257,7 +265,14 @@ public class Login extends AppCompatActivity {
                             else {
                                 dialog.show();
                                 Log.e("DEBUG", "EXECUTING");
-                                loginUser(email,password,SUPERVISOR_LOGIN);
+                                ConnectivityManager cm = (ConnectivityManager)getContext().getSystemService(CONNECTIVITY_SERVICE);
+                                if (cm.getActiveNetworkInfo() != null)
+                                    loginUser(email,password,SUPERVISOR_LOGIN);
+                                else{
+                                    dialog.dismiss();
+                                    CustomToast noNetwork = new CustomToast(thisActivity);
+                                    noNetwork.showToast("No Internet Connection! Please try again.");
+                                }
                             }
                         }
                     });
@@ -306,12 +321,6 @@ public class Login extends AppCompatActivity {
                     Log.e("DEBUG_LOGIN",preferences.getBoolean("LOGGED IN",false)+"");
 
                     FirebaseUser curr_user = authenticate.getCurrentUser();
-//                    curr_user.getIdToken(true).addOnCompleteListener(thisActivity, new OnCompleteListener<GetTokenResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-//                            Log.e("TOKEN",""+task.getResult().getToken());
-//                        }
-//                    });
                     if (curr_user.getDisplayName() == null) {
                         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(email).build();

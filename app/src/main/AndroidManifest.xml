@@ -13,17 +13,34 @@
         android:roundIcon="@mipmap/housekeeping_logo_final"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login" android:resizeableActivity="false">
+        <activity
+            android:name=".Login"
+            android:resizeableActivity="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Student_Activity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="false" />
+        <activity
+            android:name=".ContactSupervisor"
+            android:resizeableActivity="false" />
+        <activity
+            android:name=".Supervisor_Activity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="false" />
 
-        <activity android:name=".Student_Activity" android:resizeableActivity="false" />
-        <activity android:name=".ContactSupervisor" android:resizeableActivity="false" />
-        <activity android:name=".Supervisor_Activity" android:resizeableActivity="false" />
+        <service
+            android:name=".RequestNotification"
+            android:exported="false" />
+        <service
+            android:name=".Notif"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -11,6 +11,7 @@
     <color name="ClearedRequest">#198223</color>
     <color name="CancelButtonBG">#ff5a5f</color>
     <color name="RequestBoxBG">#f2f5ea</color>
+    <color name="LEDred">#d64a2f</color>
 
     <!--<color name="colorPrimary">#f2833e</color>-->
     <!--<color name="colorPrimaryDark">#c46a33</color>-->

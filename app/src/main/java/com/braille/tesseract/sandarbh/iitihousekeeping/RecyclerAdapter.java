@@ -49,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Reques
     }
 
     @Override
-    public void onBindViewHolder(final RequestHolder holder, int position) {
+    public void onBindViewHolder(final RequestHolder holder, final int position) {
 
         final int index = position;
         final Request tmp = dataList.get(position);
@@ -94,12 +94,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Reques
                 @Override
                 public void onClick(View view) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(context)
+                            .setCancelable(false)
                             .setTitle("Confirm Approval")
                             .setMessage("Are you sure you you want to mark this request complete?\nThis cannot be undone!")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    tmp.Sup_Check = true;
                                     holder.checkSup.setChecked(true);
                                     holder.checkSup.setEnabled(false);
 
@@ -112,6 +112,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Reques
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
                                                 Log.e("DEBUG","UPDATED");
+                                                dataList.get(position).Sup_Check = true;
                                                 notifyDataSetChanged();
                                             }
                                             else {
@@ -161,7 +162,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Reques
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    tmp.Stu_Check = true;
+
                                     holder.checkStu.setChecked(true);
                                     holder.checkStu.setEnabled(false);
                                     DatabaseReference request = FirebaseDatabase.getInstance().getReference()
@@ -173,6 +174,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Reques
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
                                                 Log.e("DEBUG","UPDATED");
+                                                dataList.get(position).Stu_Check = true;
                                                 notifyDataSetChanged();
                                             }
                                             else {

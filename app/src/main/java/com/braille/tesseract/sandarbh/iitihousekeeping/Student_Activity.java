@@ -3,6 +3,7 @@ package com.braille.tesseract.sandarbh.iitihousekeeping;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -79,6 +80,7 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
     private RecyclerAdapter rAdapter;
     public static SwipeRefreshLayout refreshLayout;
 
+    private Intent service;
     private DatabaseReference DB,roomUser;
 
     @Override
@@ -110,6 +112,9 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
         initNewRequest();
         retry= Loading();
         getAvailableRequests();
+
+        service = new Intent(this,RequestNotification.class);
+        //startService(service);
 
         Log.e("snds",""+new Random().nextInt(1000));
     }
@@ -767,6 +772,7 @@ public class Student_Activity extends AppCompatActivity implements SwipeRefreshL
 
         if (exit){
             Log.e("dg",""+toast.isVisible()+" "+View.VISIBLE);
+            //stopService(service);
             //FirebaseAuth.getInstance().signOut();
             //uploadDataToDatabase();
             finish();

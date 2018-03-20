@@ -168,6 +168,12 @@ public class DrawerFragment extends Fragment {
                                             SharedPreferences.Editor prefsEditor = getContext().getSharedPreferences(getResources().getString(R.string.shared_prefs), Context.MODE_PRIVATE).edit();
                                             prefsEditor.putBoolean("LOGGED IN",false);
                                             prefsEditor.commit();
+
+                                            Intent goToLoginPage = new Intent(getContext(),Login.class);
+                                            goToLoginPage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                            getContext().stopService(Supervisor_Activity.service);
+                                            startActivity(goToLoginPage);
                                             getActivity().finish();
                                         }
                                     })

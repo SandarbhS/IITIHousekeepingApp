@@ -1,7 +1,9 @@
 package com.braille.tesseract.sandarbh.iitihousekeeping;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +45,7 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
     private static TextView NAmsg;
 
     private String USERNAME;
-    private boolean exit = false,RETRY = false;
+    private boolean exit = false,RETRY = false,SERVICE_ALREADY_RUNNING = false;
 
     private ArrayList<Request> requestsList;
     private RecyclerView recyclerView;
@@ -51,6 +53,7 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
     public static SwipeRefreshLayout refreshLayout;
 
     private DatabaseReference DB,roomUser;
+    public static Intent service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +81,25 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
         retry= Loading();
         getAvailableRequests();
         checkDailyMessage();
+        initNotificationService();
 
+    }
+
+    public void initNotificationService(){
+
+//        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//        Class myservice = RequestNotification.class;
+//
+//        for (ActivityManager.RunningServiceInfo runnningservice : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            Log.e("Service Name : ",runnningservice.service.getClassName());
+//
+//            if (myservice.getName().equals(runnningservice.service.getClassName())) {
+//                Log.e("Service Name : ",runnningservice.service.getClassName());
+//                SERVICE_ALREADY_RUNNING = true;
+//            }
+//        }
+            service = new Intent(this, RequestNotification.class);
+            startService(service);
     }
 
     public void initDatabase(){
@@ -144,6 +165,7 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.e("DEBUG", "Retrieving....");
+                    requestsList.clear();
 
                     for (DataSnapshot rooms : dataSnapshot.getChildren()) {
                         Log.e("cdc","Room : "+rooms.toString());
@@ -177,19 +199,11 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
             noNetwork.showToast("No Internet Connection. Please retry!");
             refreshLayout.setRefreshing(false);
             NAmsg.setVisibility(View.VISIBLE);
-
-            if (retry.isShowing()){
-                retry.dismiss();
-                uploadDataToDatabase();
-            }
         }
 
     }
 
     public void updateRequestlist(HashMap<String,HashMap> requestsMap){
-
-        if (refreshLayout.isRefreshing() || RETRY)
-            requestsList.clear();
 
         for (Map.Entry<String,HashMap> entry : requestsMap.entrySet()){
 
@@ -199,14 +213,12 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
             requestsList.add(new Request(final_map,key));
         }
         sortRequestsList();
-        if (RETRY){
-            RETRY = false;
-            uploadDataToDatabase();
-        }
-        else {
+//        if (RETRY){
+//            RETRY = false;
+//            uploadDataToDatabase();
+//        }
             if (refreshLayout.isRefreshing())
                 refreshLayout.setRefreshing(false);
-        }
     }
 
     public void initActionBar(){
@@ -239,10 +251,6 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
         recyclerView.setLayoutManager(new LinearLayoutManager(Supervisor_Activity.this));
     }
 
-    public static void toggleMessageVisibility(){
-            NAmsg.setVisibility(View.VISIBLE);
-    }
-
     public void sortRequestsList(){
         Collections.sort(requestsList, new Comparator<Request>() {
             @Override
@@ -250,53 +258,6 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
                 return (int)(long)(request.uptime-t1.uptime);
             }
         });
-    }
-
-    public void uploadDataToDatabase(){
-
-        if (isConnectedToNetwork()) {
-            HashMap<String, Request> uploadMap = new HashMap<>();
-            for (Request tmp : requestsList) {
-                uploadMap.put("Request " + (requestsList.indexOf(tmp) + 1), tmp);
-            }
-            roomUser.setValue(uploadMap);
-
-            if (retry.isShowing()) {
-                retry.dismiss();
-                CustomToast done = new CustomToast(this);
-                done.showToast("Done!");
-            }
-            finish();
-
-        }
-        else {
-            Log.e("DEBUG","NO NETWORK");
-            if (retry.isShowing())
-                retry.dismiss();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("No internet connection was detected. If you exit now all the changes made by you may be lost.")
-                    .setPositiveButton("EXIT ANYWAY", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("RETRY", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            showRetryDialog();
-                            RETRY = true;
-                            getAvailableRequests();
-                            //uploadDataToDatabase();
-                        }
-                    })
-                    .setCancelable(false);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
     }
 
     public boolean isConnectedToNetwork(){
@@ -357,10 +318,6 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
         return builder.create();
     }
 
-    private void showRetryDialog(){
-        retry.show();
-    }
-
     @Override
     public void onBackPressed() {
 
@@ -372,6 +329,7 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
         if (exit){
             //uploadDataToDatabase();
             //FirebaseAuth.getInstance().signOut();
+            //stopService(service);
             finish();
         }
         else{
@@ -410,5 +368,56 @@ public class Supervisor_Activity extends AppCompatActivity implements SwipeRefre
         Log.e("DEBUG","DATA SAVED!");
         outState.putSerializable("Requests",requestsList);
     }
+
+    /*public void uploadDataToDatabase(){
+
+        if (isConnectedToNetwork()) {
+            HashMap<String, Request> uploadMap = new HashMap<>();
+            for (Request tmp : requestsList) {
+                uploadMap.put("Request " + (requestsList.indexOf(tmp) + 1), tmp);
+            }
+            roomUser.setValue(uploadMap);
+
+            if (retry.isShowing()) {
+                retry.dismiss();
+                CustomToast done = new CustomToast(this);
+                done.showToast("Done!");
+            }
+            finish();
+
+        }
+        else {
+            Log.e("DEBUG","NO NETWORK");
+            if (retry.isShowing())
+                retry.dismiss();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Warning")
+                    .setMessage("No internet connection was detected. If you exit now all the changes made by you may be lost.")
+                    .setPositiveButton("EXIT ANYWAY", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("RETRY", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            showRetryDialog();
+                            RETRY = true;
+                            getAvailableRequests();
+                            //uploadDataToDatabase();
+                        }
+                    })
+                    .setCancelable(false);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }*/
+
+//    private void showRetryDialog(){
+//        retry.show();
+//    }
 
 }
