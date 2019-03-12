@@ -1,6 +1,6 @@
 # IITI Housekeeping App
 
-UI Design by Devashish Shukla.
+UI Design aided by Devashish Shukla.
 
 For use by IIT Indore Community only.
 
